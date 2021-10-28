@@ -54,10 +54,10 @@ class simVSexp:
         self.rotate_image(self.rotateAngle)
         self.im = cv2.resize(self.im, (0, 0), fx=0.5, fy=0.5)
         imgray = cv2.cvtColor(self.im, cv2.COLOR_BGR2GRAY)
-        # make the bright spot dark
-        brightnessThreash = 0.6 * np.max(imgray)
-        for rowIndex in range(np.shape(imgray)[0]):
-            imgray[rowIndex] = [x if x < brightnessThreash else 0 for x in imgray[rowIndex]]
+        # # make the bright spot dark
+        # brightnessThreash = 0.6 * np.max(imgray)
+        # for rowIndex in range(np.shape(imgray)[0]):
+        #     imgray[rowIndex] = [x if x < brightnessThreash else 0 for x in imgray[rowIndex]]
         
         im_gauss = cv2.GaussianBlur(imgray, (5, 5), cv2.BORDER_DEFAULT)
         #test = np.max(imgray)
