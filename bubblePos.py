@@ -296,7 +296,7 @@ class simVSexp:
 
 if __name__ == '__main__':
     #file = '14.jpg'
-    file = '0.png'
+    file = '00.png'
     #cAngle = 20
     #cAngle = 22
     cAngle = 17
