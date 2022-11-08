@@ -7,7 +7,7 @@ import csv
 from scipy.optimize import minimize
 import copy
 
-debug = 0
+debug = 1
 loss_mode = 0
 
 class datapair:
@@ -62,8 +62,8 @@ class simVSexp:
         im_gauss = cv2.GaussianBlur(imgray, (5, 5), cv2.BORDER_DEFAULT)
         #test = np.max(imgray)
         #im_gauss = imgray
-        #ret, thresh = cv2.threshold(im_gauss, 90, 255, cv2.THRESH_BINARY)
-        ret, thresh = cv2.threshold(im_gauss, 110, 255, cv2.THRESH_BINARY)
+        # ret, thresh = cv2.threshold(im_gauss, 90, 255, cv2.THRESH_BINARY)
+        ret, thresh = cv2.threshold(im_gauss, 100, 255, cv2.THRESH_BINARY)
         #thresh = cv2.Canny(im_gauss, 70, 100)
         cv2.imshow('thresh',thresh)
         if debug and cv2.waitKey(0):
@@ -254,14 +254,15 @@ class simVSexp:
         copy_im = copy.copy(self.im)
         cv2.drawContours(copy_im, self.contours_cirles, -1, (0,255,0), 3)
         cv2.imshow('1',copy_im)
-        cv2.drawContours(self.im, [self.sim_con], -1, (0,255,0), 3)
-        cv2.imshow('2',self.im)
-        cv2.drawContours(self.im, self.contours_cirles, -1, (255,0,0), 2)
-        cv2.imshow('3',self.im)
-        #print("mean calA = ", np.mean([x.mean for x in self.calA]))
-        print("exp calA = ", np.mean([x.mean for x in self.calA]))
-        print("sim calA = ", self.sim_calA)
-        #print("uncertainty = ", np.sqrt(np.sum([x.uncertainty**2 for x in calA]))/len(calA))
+        if not debug:
+            cv2.drawContours(self.im, [self.sim_con], -1, (0,255,0), 3)
+            cv2.imshow('2',self.im)
+            cv2.drawContours(self.im, self.contours_cirles, -1, (255,0,0), 2)
+            cv2.imshow('3',self.im)
+            #print("mean calA = ", np.mean([x.mean for x in self.calA]))
+            print("exp calA = ", np.mean([x.mean for x in self.calA]))
+            print("sim calA = ", self.sim_calA)
+            #print("uncertainty = ", np.sqrt(np.sum([x.uncertainty**2 for x in calA]))/len(calA))
 
         if cv2.waitKey(0):
             cv2.destroyAllWindows()
@@ -288,8 +289,8 @@ class simVSexp:
     def run(self):
         self.imageProcessing()
         #self.calRotateAngle()
-        #if (not debug):
-        self.parameterSearch()
+        if (not debug):
+            self.parameterSearch()
         self.plotCon()
         self.debug_file.close()
         print('MSD = ' + str(self.evaluateVDist()))
