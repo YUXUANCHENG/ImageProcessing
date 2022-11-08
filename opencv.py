@@ -7,7 +7,7 @@ import csv
 from scipy.optimize import minimize
 import copy
 
-debug = 1
+debug = 0
 loss_mode = 0
 
 class datapair:
@@ -231,6 +231,13 @@ class simVSexp:
         #self.contours_cirles.append(self.sim_con)
 
     def score(self, para):
+        if len(para) == 3:
+            g = para[2]
+            para[2] = para[1]
+            para = np.append(para,g)
+        if len(para) == 2:
+            g = para[1]
+            para = np.append(para[0],[0,0,g])
         self.runSim(para)
         angelDev = abs(self.exp_angle - self.sim_angle)/self.exp_angle
         areaDev = abs(self.exp_area - self.sim_area)/self.exp_area
@@ -261,13 +268,21 @@ class simVSexp:
     
     def parameterSearch(self):
         #x0 = np.array([1, 0.1, 0.15, 0.3])
-        x0 = np.array([0.2, 0.01, 0.02, 0.3])
+        # x0 = np.array([0.2, 0.01, 0.02, 0.3])
+        # x0 = np.array([0.2, 0.015, 0.3])
+        # x0 = np.array([0.3, 0.3])
+        x0 = np.array([0.02, 0.3])
         if debug:
             self.score(x0)
         else:
             res = minimize(self.score, x0, method='nelder-mead', 
-                        bounds=((0.1, 3), (0.01, 0.2), (-0.1, 0.3), (0.05, 0.3)),
-                        options={'xatol': 1e-5, 'disp': True})
+                        bounds=((0, 3), 
+                            # (0.01, 0.2), 
+                            # (-0.1, 0.3), 
+                            (0.05, 0.3)),
+                        tol = 1,
+                        options={'xatol': 1e-5, 'disp': True, 'maxiter' : 300})
+            print(['kl','gama1','gama2','g'])
             print(res.x)
 
     def run(self):
